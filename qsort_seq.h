@@ -1,7 +1,3 @@
-//
-// Created by  Valentina Smirnova on 17.01.2022.
-//
-
 #ifndef PARALLEL_ALGORITHMS_QSORT_SEQ_H
 #define PARALLEL_ALGORITHMS_QSORT_SEQ_H
 
