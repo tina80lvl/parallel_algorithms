@@ -1,14 +1,20 @@
 #include <iostream>
 #include <cmath>
 #include <string>
-#include <fstream>
+
+typedef struct graphstruct {
+    int nv;
+    int ne;
+    int *nbr;
+    int *firstnbr;
+} graph;
 
 class VertexBag {
 
     int bagSize;
 
     int lengthOfArray;
-    int* bagArray;
+    int *bagArray;
 
     /* Where the min vertex is located */
     int counter;
@@ -29,14 +35,16 @@ public:
         return bagSize;
     }
 
-    double getNedges(){
+    double getNedges() {
         return nedges;
     }
+
     void addEdge() {
         nedges++;
     }
 
     int peekMin();
+
     int popMin();
 
     void minHeapify(int pos);
@@ -53,7 +61,7 @@ public:
 
     void printBag();
 
-    bool isEmpty(){
+    bool isEmpty() {
         return size() == 0;
     }
 };
@@ -67,9 +75,9 @@ VertexBag::VertexBag() {
     nedges = 0;
 }
 
-void VertexBag::printBag(){
+void VertexBag::printBag() {
     std::cout << "Bag: ";
-    for (int i = 0; i <size() && i < 10; i++) {
+    for (int i = 0; i < size() && i < 10; i++) {
         std::cout << bagArray[i] << ", ";
     }
     std::cout << "\n";
@@ -79,23 +87,23 @@ void VertexBag::push(int vertex) {
     int tmp;
     int i = bagSize;
 
-    if (bagSize == lengthOfArray){
-        int *newArray = new int[lengthOfArray*2];
-        for (int j = 0; j < lengthOfArray; j++){
+    if (bagSize == lengthOfArray) {
+        int *newArray = new int[lengthOfArray * 2];
+        for (int j = 0; j < lengthOfArray; j++) {
             newArray[j] = bagArray[j];
         }
         free(bagArray);
         bagArray = newArray;
-        lengthOfArray = lengthOfArray*2;
+        lengthOfArray = lengthOfArray * 2;
     }
 
     bagArray[bagSize++] = vertex;
 
-    while(i > 0 && bagArray[(i-1)/2] > vertex && heap) {
-        tmp = bagArray[(i-1)/2];
-        bagArray[(i-1)/2] = bagArray[i];
+    while (i > 0 && bagArray[(i - 1) / 2] > vertex && heap) {
+        tmp = bagArray[(i - 1) / 2];
+        bagArray[(i - 1) / 2] = bagArray[i];
         bagArray[i] = tmp;
-        i = (i-1)/2;
+        i = (i - 1) / 2;
     }
 
 }
@@ -103,7 +111,7 @@ void VertexBag::push(int vertex) {
 int VertexBag::peekMin() {
     if (bagSize == 0) return -1;
     if (heap) return bagArray[0];
-    else 	return bagArray[counter];
+    else return bagArray[counter];
 }
 
 int VertexBag::popMin() {
@@ -116,24 +124,23 @@ int VertexBag::popMin() {
 
         minHeapify(0);
         return min;
-    }
-    else {
+    } else {
         return bagArray[counter++];
     }
 
 }
 
-void VertexBag::minHeapify(int i){
+void VertexBag::minHeapify(int i) {
     int l, r, min;
-    l = (i+1)*2-1;
-    r = (i+1)*2;
+    l = (i + 1) * 2 - 1;
+    r = (i + 1) * 2;
 
     if (l < bagSize && bagArray[l] < bagArray[i]) {
         min = l;
     } else {
         min = i;
     }
-    if (l < bagSize && bagArray[r] < bagArray[i]){
+    if (l < bagSize && bagArray[r] < bagArray[i]) {
         min = r;
     }
 
@@ -151,19 +158,20 @@ int VertexBag::getElement(int i) {
     return bagArray[i];
 }
 
-void VertexBag::mergeBags(VertexBag *bag){
+void VertexBag::mergeBags(VertexBag *bag) {
     int *temp;
     temp = new int[size() + bag->size()];
     int i = 0;
 
-    while (!isEmpty() || !bag->isEmpty()){
+    while (!isEmpty() || !bag->isEmpty()) {
 
-        if(bag->peekMin() == peekMin() && !isEmpty() && !bag->isEmpty()){
+        if (bag->peekMin() == peekMin() && !isEmpty() && !bag->isEmpty()) {
             temp[i] = popMin();
             bag->popMin();
-        }else if(!bag->isEmpty() && (bag->peekMin() < peekMin() || isEmpty())) {
-            temp[i] =  bag->popMin();
-        }else if(peekMin() >= 0){
+        } else if (!bag->isEmpty() &&
+                   (bag->peekMin() < peekMin() || isEmpty())) {
+            temp[i] = bag->popMin();
+        } else if (peekMin() >= 0) {
             temp[i] = popMin();
         }
         i++;
